@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "853400567896",
+    "project_id": "socialapp-9350c",
+    "storage_bucket": "socialapp-9350c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853400567896:android:e91ff7ce12a98beff48a2d",
+        "android_client_info": {
+          "package_name": "com.shubu.MySocial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853400567896-o3hmd9neiu8k9n8bph7cvh2khgs3qj2d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shubu.MySocial",
+            "certificate_hash": "69f200789dc20dba8edff540760141e070b3bead"
+          }
+        },
+        {
+          "client_id": "853400567896-ajkq5a4pt6j5nl22lis8lapr39ha5t89.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEIFas3dWcVwfNouZDl2lcl8lXNbBFULs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "853400567896-ajkq5a4pt6j5nl22lis8lapr39ha5t89.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
