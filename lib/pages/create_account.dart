@@ -53,12 +53,11 @@ class _CreateAccountState extends State<CreateAccount> {
             FlatButton(
               onPressed: submit,
               child: Container(
-                height: 50.0, // not good for small mobiles please figure out how to solve it
+                height: 50.0,
                 width: 350.0,
                 decoration: BoxDecoration(
                   color: Colors.teal,
                   borderRadius: BorderRadius.circular(7.0),
-                  //may need to add a color
                 ),
                 child: Center(
                   child: Text(

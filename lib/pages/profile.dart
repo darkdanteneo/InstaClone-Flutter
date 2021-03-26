@@ -65,7 +65,9 @@ class _ProfileState extends State<Profile> {
           alignment: Alignment.center,
           child: Text(
             text,
-            style: TextStyle(fontWeight: FontWeight.bold, color: isFollowing ? Colors.black : Colors.white),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isFollowing ? Colors.black : Colors.white),
           ),
           width: 250.0,
           height: 27.0,
@@ -99,16 +101,28 @@ class _ProfileState extends State<Profile> {
       isFollowing = false;
       followersCount--;
     });
-    // remove current user to this user profile followers
-    followersRef.doc(widget.profileId).collection('userFollowers').doc(currentUserId).get().then((doc) {
+    followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId)
+        .get()
+        .then((doc) {
       if (doc.exists) doc.reference.delete();
     });
-    // remove this user to current user following
-    followingRef.doc(currentUserId).collection('userFollowers').doc(widget.profileId).get().then((doc) {
+    followingRef
+        .doc(currentUserId)
+        .collection('userFollowers')
+        .doc(widget.profileId)
+        .get()
+        .then((doc) {
       if (doc.exists) doc.reference.delete();
     });
-    // remove activity feed to this user
-    activityFeedRef.doc(widget.profileId).collection('feedItems').doc(currentUserId).get().then((doc) {
+    activityFeedRef
+        .doc(widget.profileId)
+        .collection('feedItems')
+        .doc(currentUserId)
+        .get()
+        .then((doc) {
       if (doc.exists) doc.reference.delete();
 
       timelineRef
@@ -125,12 +139,21 @@ class _ProfileState extends State<Profile> {
       isFollowing = true;
       followersCount++;
     });
-    // adding current user to this user profile followers
-    followersRef.doc(widget.profileId).collection('userFollowers').doc(currentUserId).set({});
-    // adding this user to current user following
-    followingRef.doc(currentUserId).collection('userFollowers').doc(widget.profileId).set({});
-    // add activity feed to this user
-    activityFeedRef.doc(widget.profileId).collection('feedItems').doc(currentUserId).set({
+    followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId)
+        .set({});
+    followingRef
+        .doc(currentUserId)
+        .collection('userFollowers')
+        .doc(widget.profileId)
+        .set({});
+    activityFeedRef
+        .doc(widget.profileId)
+        .collection('feedItems')
+        .doc(currentUserId)
+        .set({
       'type': 'follow',
       'ownerId': widget.profileId,
       'username': currentUser.username,
@@ -138,10 +161,17 @@ class _ProfileState extends State<Profile> {
       'userProfileImg': currentUser.photoUrl,
       'timestamp': timeStamp,
     });
-    postsRef.doc(widget.profileId).collection('usersPosts').get().then((docu) => {
-          docu.docs.forEach(
-              (docum) => timelineRef.doc(currentUserId).collection('timelinePosts').doc(docum.id).set(docum.data()))
-        });
+    postsRef
+        .doc(widget.profileId)
+        .collection('usersPosts')
+        .get()
+        .then((docu) => {
+              docu.docs.forEach((docum) => timelineRef
+                  .doc(currentUserId)
+                  .collection('timelinePosts')
+                  .doc(docum.id)
+                  .set(docum.data()))
+            });
   }
 
   buildProfileHeader() {
@@ -211,8 +241,11 @@ class _ProfileState extends State<Profile> {
     setState(() {
       isLoading = true;
     });
-    QuerySnapshot snapshot =
-        await postsRef.doc(widget.profileId).collection('usersPosts').orderBy('timeStamp', descending: true).get();
+    QuerySnapshot snapshot = await postsRef
+        .doc(widget.profileId)
+        .collection('usersPosts')
+        .orderBy('timeStamp', descending: true)
+        .get();
     setState(() {
       isLoading = false;
       postCount = snapshot.docs.length;
@@ -274,7 +307,9 @@ class _ProfileState extends State<Profile> {
         IconButton(
           icon: Icon(
             Icons.grid_on,
-            color: postOrientation == 'grid' ? Theme.of(context).accentColor : Colors.white,
+            color: postOrientation == 'grid'
+                ? Theme.of(context).accentColor
+                : Colors.white,
           ),
           onPressed: () {
             setState(() {
@@ -290,7 +325,9 @@ class _ProfileState extends State<Profile> {
           },
           icon: Icon(
             Icons.list,
-            color: postOrientation == 'list' ? Theme.of(context).accentColor : Colors.white,
+            color: postOrientation == 'list'
+                ? Theme.of(context).accentColor
+                : Colors.white,
           ),
         ),
       ],
@@ -307,22 +344,31 @@ class _ProfileState extends State<Profile> {
   }
 
   getFollowers() async {
-    QuerySnapshot snapshot = await followersRef.doc(widget.profileId).collection('userFollowers').get();
+    QuerySnapshot snapshot = await followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .get();
     setState(() {
       followersCount = snapshot.docs.length;
     });
   }
 
   getFollowing() async {
-    QuerySnapshot snapshot = await followingRef.doc(widget.profileId).collection('userFollowers').get();
+    QuerySnapshot snapshot = await followingRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .get();
     setState(() {
       followingCount = snapshot.docs.length;
     });
   }
 
   checkFollowing() async {
-    DocumentSnapshot doc =
-        await followersRef.doc(widget.profileId).collection('userFollowers').doc(currentUserId).get();
+    DocumentSnapshot doc = await followersRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId)
+        .get();
     setState(() {
       isFollowing = doc.exists;
     });

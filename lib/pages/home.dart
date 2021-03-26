@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -54,7 +52,7 @@ class _HomeState extends State<Home> {
 
   login() {
     googleSignIn.signIn();
-  } //sign in and sign out functions
+  }
 
   logout() {
     googleSignIn.signOut();
@@ -76,22 +74,16 @@ class _HomeState extends State<Home> {
 
   configurePushNotifications() {
     final GoogleSignInAccount user = googleSignIn.currentUser;
-    if (Platform.isIOS) getIosPermissions();
 
     _firebaseMessaging.getToken().then((token) {
-      // print("Firebase Messaging Token: $token\n");
       usersRef.doc(user.id).update({"androidNotificationToken": token});
     });
 
     _firebaseMessaging.configure(
-      // onLaunch: (Map<String, dynamic> message) async {},
-      // onResume: (Map<String, dynamic> message) async {},
       onMessage: (Map<String, dynamic> message) async {
-        //print("on message: $message\n");
         final String recipientId = message['data']['recipient'];
         final String body = message['notification']['body'];
         if (recipientId == user.id) {
-          //print("Notification shown!");
           SnackBar snackbar = SnackBar(
               content: Text(
             body,
@@ -104,22 +96,9 @@ class _HomeState extends State<Home> {
     );
   }
 
-  getIosPermissions() {
-    _firebaseMessaging.requestNotificationPermissions(IosNotificationSettings(
-      alert: true,
-      badge: true,
-      sound: true,
-    ));
-    _firebaseMessaging.onIosSettingsRegistered.listen((settings) {
-      //print("settings registered : $settings");
-    });
-  }
-
   createUserInFireStore() async {
-    // check if the user is on our database
     final GoogleSignInAccount user = googleSignIn.currentUser;
     DocumentSnapshot doc = await usersRef.doc(user.id).get();
-    // if not create new user
     if (!doc.exists) {
       final username = await Navigator.push(
         context,
@@ -136,8 +115,11 @@ class _HomeState extends State<Home> {
         "bio": "",
         "timeStamp": timeStamp,
       });
-      //add user to his own followers
-      followersRef.doc(user.id).collection('userFollowers').doc(user.id).set({});
+      followersRef
+          .doc(user.id)
+          .collection('userFollowers')
+          .doc(user.id)
+          .set({});
       doc = await usersRef.doc(user.id).get();
     }
     currentUser = User.fromDocument(doc);
@@ -212,7 +194,7 @@ class _HomeState extends State<Home> {
                 fontSize: 90.0,
                 color: Colors.white,
               ),
-            ), //title
+            ),
             GestureDetector(
               onTap: login,
               child: Image.asset(
@@ -220,7 +202,7 @@ class _HomeState extends State<Home> {
                 height: 50.0,
                 width: 350.0,
               ),
-            ), // i was able to use flat button also ?google sign in
+            ),
           ],
         ),
       ),
@@ -235,19 +217,17 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // recognizeing loging in and out
     googleSignIn.onCurrentUserChanged.listen((account) {
       handleSignIn(account);
     }, onError: (err) {
       print(err);
     });
-    googleSignIn.signInSilently(suppressErrors: false).then((account) {
+    /*googleSignIn.signInSilently(suppressErrors: false).then((account) {
       handleSignIn(account);
     }).catchError((err) {
       print(err);
-    });
-    pageController = PageController(); //can change initital page
-    //followersRef.document(currentUser.id).collection('userFollowers').document(currentUser.id).setData({});
+    });*/
+    pageController = PageController();
 
     super.initState();
   }
@@ -259,17 +239,14 @@ class _HomeState extends State<Home> {
     /*return FutureBuilder(
       future: Firebase.initializeApp(),
       builder: (context, snapshot) {
-        // Check for errors
         if (snapshot.hasError) {
           return Text("Error");
         }
 
-        // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           return isAuth ? buildAuthScreen() : buildUnAuthScreen();
         }
 
-        // Otherwise, show something whilst waiting for initialization to complete
         return Text("Loading");
       },
     );*/

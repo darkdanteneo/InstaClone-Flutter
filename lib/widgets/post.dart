@@ -86,7 +86,8 @@ class _PostState extends State<Post> {
           ),
           title: Text(
             user.username,
-            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'RocknRoll'),
+            style:
+                TextStyle(fontWeight: FontWeight.bold, fontFamily: 'RocknRoll'),
           ),
           onTap: () => showProfile(context, profileId: ownerId),
           subtitle: Text((location == null) ? location : "Image"),
@@ -114,7 +115,8 @@ class _PostState extends State<Post> {
                   style: TextStyle(color: Colors.red),
                 ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Home()));
                   deletePost();
                 },
               ),
@@ -132,31 +134,41 @@ class _PostState extends State<Post> {
   }
 
   deletePost() async {
-    // delete post itself
-    postsRef.doc(ownerId).collection("usersPosts").doc(postId).get().then((doc) {
+    postsRef
+        .doc(ownerId)
+        .collection("usersPosts")
+        .doc(postId)
+        .get()
+        .then((doc) {
       if (doc.exists) {
         doc.reference.delete();
       }
     });
-    // delete img from database
     storageRef.child("post_$postId.jpg").delete();
-    // delete activity feed
-    QuerySnapshot activityFeedSnapshot =
-        await activityFeedRef.doc(ownerId).collection("feedItems").where("postId", isEqualTo: postId).get();
+    QuerySnapshot activityFeedSnapshot = await activityFeedRef
+        .doc(ownerId)
+        .collection("feedItems")
+        .where("postId", isEqualTo: postId)
+        .get();
     activityFeedSnapshot.docs.forEach((doc) {
       if (doc.exists) {
         doc.reference.delete();
       }
     });
-    // delete comments
-    QuerySnapshot commentsSnapshot = await commentsRef.doc(postId).collection("comment").get();
+    QuerySnapshot commentsSnapshot =
+        await commentsRef.doc(postId).collection("comment").get();
     commentsSnapshot.docs.forEach((doc) {
       if (doc.exists) {
         doc.reference.delete();
       }
     });
-    followersRef.doc(currentUser.id).collection('userFollowers').get().then((docs) => docs.docs.forEach((doc) =>
-        (timelineRef.doc(doc.id).collection('timelinePosts').doc(postId).get().then((doc) => doc.reference.delete()))));
+    followersRef.doc(currentUser.id).collection('userFollowers').get().then(
+        (docs) => docs.docs.forEach((doc) => (timelineRef
+            .doc(doc.id)
+            .collection('timelinePosts')
+            .doc(postId)
+            .get()
+            .then((doc) => doc.reference.delete()))));
   }
 
   addLikeToActivityFeed() {
@@ -175,7 +187,12 @@ class _PostState extends State<Post> {
 
   removeLikeFromFeed() {
     if (currentUserId != ownerId) {
-      activityFeedRef.doc(ownerId).collection('feedItems').doc(postId).get().then((doc) {
+      activityFeedRef
+          .doc(ownerId)
+          .collection('feedItems')
+          .doc(postId)
+          .get()
+          .then((doc) {
         if (doc.exists) doc.reference.delete();
       });
     }
@@ -184,7 +201,11 @@ class _PostState extends State<Post> {
   handleLikePost() {
     bool _isLiked = likes[currentUserId] == true;
     if (_isLiked) {
-      postsRef.doc(ownerId).collection('usersPosts').doc(postId).update({'likes.$currentUserId': false});
+      postsRef
+          .doc(ownerId)
+          .collection('usersPosts')
+          .doc(postId)
+          .update({'likes.$currentUserId': false});
       removeLikeFromFeed();
       setState(() {
         likesCount -= 1;
@@ -192,7 +213,11 @@ class _PostState extends State<Post> {
         likes[currentUserId] = false;
       });
     } else if (!_isLiked) {
-      postsRef.doc(ownerId).collection('usersPosts').doc(postId).update({'likes.$currentUserId': true});
+      postsRef
+          .doc(ownerId)
+          .collection('usersPosts')
+          .doc(postId)
+          .update({'likes.$currentUserId': true});
       addLikeToActivityFeed();
       setState(() {
         likesCount += 1;
@@ -236,7 +261,8 @@ class _PostState extends State<Post> {
     );
   }
 
-  showComments(BuildContext context, {String postId, String ownerId, String mediaUrl}) {
+  showComments(BuildContext context,
+      {String postId, String ownerId, String mediaUrl}) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return Comments(
         postId: postId,
@@ -320,7 +346,7 @@ class _PostState extends State<Post> {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 5,
               blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
+              offset: Offset(0, 3),
             ),
           ],
         ),
